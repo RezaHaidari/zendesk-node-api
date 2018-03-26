@@ -27,10 +27,11 @@ var Accessor = function(config, single, plural){
       })
     },
 
-    show: function(id){
+    show: function(id, childrenName){
+			var children = childrenName ? '/'+childrenName : ''
       return new Promise(function(fufill, reject){
-        zdrequest.get('/' + plural + '/' + id + '.json').then(function(data){
-          fufill(data[single])
+        zdrequest.get('/' + plural + '/' + id + children + '.json').then(function(data){
+          fufill(children ? data[childrenName] : data[single])
         }).catch(function(err){
           reject(err)
         })
@@ -61,11 +62,12 @@ var Accessor = function(config, single, plural){
       })
     },
 
-    update: function(id, data){
+    update: function(id, data, child){
       var createData = {}
       createData[single] = data;
+			child = child ? '/'+child.name+'/'+child.id : ''
       return new Promise(function(fufill, reject){
-        zdrequest.put('/' + plural + '/' + id + '.json', createData).then(function(data){
+        zdrequest.put('/' + plural + '/' + id + children + '.json', createData).then(function(data){
           fufill(data)
         }).catch(function(err){
           reject(err)
